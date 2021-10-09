@@ -1,0 +1,5 @@
+package com.finances.model;
+
+public enum EntryStatus {
+
+}

@@ -1,0 +1,13 @@
+package com.finances.service;
+
+import com.finances.model.User;
+
+public interface UserService {
+
+	User authenticate(String email, String passowrd);
+	
+	User saveUser(User user);
+	
+	void validatEmail(String email);
+	
+}

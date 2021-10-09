@@ -1,0 +1,52 @@
+package com.finances.model.repository;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.finances.model.User;
+import com.finances.repository.UserRepository;
+
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test") //Especifica que será utilizado o application-test.properties
+@DataJpaTest //Realiza o rollback na transação de cada teste realizado
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+public class UserRepositoryTest {
+
+	@Autowired
+	UserRepository repository;
+	
+	@Test
+	public void mustCheckForAnEmail() {
+		
+		//Scenery
+		User user = User.builder().name("pedro").email("pedro@hotmail.com").password("123456").build();
+		repository.save(user);
+		
+		//Action 
+		boolean result = repository.existsByEmail("pedro@hotmail.com");
+		
+		//Verification
+		Assertions.assertThat(result).isTrue();
+	}
+	
+	@Test
+	public void mustReturnFalseWhenTheUserIsNotRegistered() {
+		
+		//Scenery
+		repository.deleteAll();
+		
+		//Action 
+		boolean result = repository.existsByEmail("pedro@hotmail.com");
+		
+		//Verification
+		Assertions.assertThat(result).isFalse();
+	}
+}

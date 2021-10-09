@@ -1,0 +1,99 @@
+package com.finances.model;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "tb_user")
+public class User {
+	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	private Long id;
+	
+	@Size(max=150)
+	private String name;
+	
+	@NotBlank
+	@Email
+	private String email;
+	
+	@NotBlank
+	@Size(min=6)
+	private String password;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("user")
+	private List<Entries> entries;
+	
+	
+	//Getters & Setters
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getDateRegister() {
+		return dateRegister;
+	}
+
+	public void setDateRegister(Date dateRegister) {
+		this.dateRegister = dateRegister;
+	}
+
+	public List<Entries> getEntries() {
+		return entries;
+	}
+
+	public void setEntries(List<Entries> entries) {
+		this.entries = entries;
+	}
+	
+	
+
+}

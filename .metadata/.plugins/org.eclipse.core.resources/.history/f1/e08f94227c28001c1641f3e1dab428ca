@@ -1,0 +1,7 @@
+package com.finances.model.enums;
+
+public enum EntrieType {
+
+	REVENUE,
+	EXPENDITURE
+}

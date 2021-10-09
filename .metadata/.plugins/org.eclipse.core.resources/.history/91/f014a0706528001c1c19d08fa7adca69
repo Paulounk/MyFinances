@@ -1,0 +1,45 @@
+package com.finances.model;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "tb_finances")
+public class Finances {
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	private long id;
+	
+	@NotBlank
+	@Size(max = 150)
+	private String description;
+	
+	@NotBlank
+	private int month;
+	
+	@NotBlank
+	private int year;
+	
+	@NotBlank
+	private double value;
+	
+	@NotBlank
+	private String type;
+	
+	@NotBlank
+	private boolean status;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
+
+}

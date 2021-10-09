@@ -1,0 +1,164 @@
+package com.finances.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "tb_entries")
+public class Entries {
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	private Long id;
+	
+	@NotBlank
+	@Size(max = 150)
+	private String description;
+	
+	@NotBlank
+	private Integer month;
+	
+	@NotBlank
+	private Integer year;
+	
+	@NotBlank
+	private BigDecimal value;
+	
+	@NotBlank
+	@Enumerated(value = EnumType.STRING)
+	private EntrieType type;
+	
+	@NotBlank
+	@Enumerated(value = EnumType.STRING)
+	private EntryStatus status;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
+	
+	@ManyToOne
+    @JsonIgnoreProperties("entries")
+    private User user;
+
+	
+	//Getters & Setters
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getMonth() {
+		return month;
+	}
+
+	public void setMonth(Integer month) {
+		this.month = month;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public BigDecimal getValue() {
+		return value;
+	}
+
+	public void setValue(BigDecimal value) {
+		this.value = value;
+	}
+
+	public EntrieType getType() {
+		return type;
+	}
+
+	public void setType(EntrieType type) {
+		this.type = type;
+	}
+
+	public EntryStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EntryStatus status) {
+		this.status = status;
+	}
+
+	public Date getDateRegister() {
+		return dateRegister;
+	}
+
+	public void setDateRegister(Date dateRegister) {
+		this.dateRegister = dateRegister;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(dateRegister, description, id, month, status, type, user, value, year);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entries other = (Entries) obj;
+		return Objects.equals(dateRegister, other.dateRegister) && Objects.equals(description, other.description)
+				&& Objects.equals(id, other.id) && Objects.equals(month, other.month) && status == other.status
+				&& type == other.type && Objects.equals(user, other.user) && Objects.equals(value, other.value)
+				&& Objects.equals(year, other.year);
+	}
+
+	@Override
+	public String toString() {
+		return "Entries [id=" + id + ", description=" + description + ", month=" + month + ", year=" + year + ", value="
+				+ value + ", type=" + type + ", status=" + status + ", dateRegister=" + dateRegister + ", user=" + user
+				+ "]";
+	}
+
+	
+	
+	
+	
+
+}

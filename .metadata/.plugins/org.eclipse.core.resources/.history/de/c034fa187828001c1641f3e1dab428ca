@@ -1,0 +1,60 @@
+package com.finances.model;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "tb_entries")
+public class Entries {
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	private Long id;
+	
+	@NotBlank
+	@Size(max = 150)
+	private String description;
+	
+	@NotBlank
+	private Integer month;
+	
+	@NotBlank
+	private Integer year;
+	
+	@NotBlank
+	private Double value;
+	
+	@NotBlank
+	@Enumerated(value = EnumType.STRING)
+	private EntrieType type;
+	
+	@NotBlank
+	private EntryStatus status;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
+	
+	@ManyToOne
+    @JsonIgnoreProperties("entries")
+    private User user;
+
+	
+	//Getters & Setters
+	
+	
+
+}

@@ -1,0 +1,5 @@
+package com.finances.repository;
+
+public interface User {
+
+}

@@ -1,0 +1,2 @@
+INDEX VERSION 1.131+D:\Pessoal\Projetos\MyFinances\.metadata\.plugins\org.eclipse.jdt.core
+167362359.index

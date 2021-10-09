@@ -1,0 +1,48 @@
+package com.finances.service.impl;
+
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import com.finances.exception.BusinessRuleException;
+import com.finances.model.User;
+import com.finances.repository.UserRepository;
+import com.finances.service.UserService;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	private UserRepository repository;
+	
+	public UserServiceImpl(UserRepository repository) {
+		super();
+		this.repository = repository;
+	}
+
+	@Override
+	public User authenticate(String email, String passowrd) {
+	
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public User saveUser(User user) {
+
+		validateEmail(user.getEmail());
+		return repository.save(user);
+	}
+
+	@Override
+	public void validateEmail(String email) {
+		
+		boolean exist = repository.existsByEmail(email);
+		if(exist) {
+			throw new BusinessRuleException("Already exists a user with this e-mail!");
+		}
+	}
+	
+	
+
+}

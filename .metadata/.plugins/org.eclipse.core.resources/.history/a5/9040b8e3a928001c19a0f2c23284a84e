@@ -1,0 +1,42 @@
+package com.finances.service.impl;
+
+
+import org.springframework.stereotype.Service;
+
+import com.finances.exception.RegraNegocioExcpetion;
+import com.finances.model.User;
+import com.finances.repository.UserRepository;
+import com.finances.service.UserService;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	private UserRepository repository;
+	
+	public UserServiceImpl(UserRepository repository) {
+		super();
+		this.repository = repository;
+	}
+
+	@Override
+	public User authenticate(String email, String passowrd) {
+		return null;
+	}
+
+	@Override
+	public User saveUser(User user) {
+		return null;
+	}
+
+	@Override
+	public void validarEmail(String email) {
+		
+		boolean exist = repository.existsByEmail(email);
+		if(exist) {
+			throw new RegraNegocioExcpetion("Already exists a user with this e-mail!");
+		}
+	}
+	
+	
+
+}

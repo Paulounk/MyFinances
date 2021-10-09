@@ -1,0 +1,5 @@
+package com.finances.service.impl;
+
+public class UserServiceImpl {
+
+}

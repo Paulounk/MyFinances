@@ -1,0 +1,5 @@
+package com.finances.exception;
+
+public class RegraNegocioExcpetion extends Exception {
+
+}
