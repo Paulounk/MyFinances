@@ -51,13 +51,12 @@ public class User {
 	@Column(name = "password")
 	private String password;
 	
+	@Builder.Default
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("user")
-	private List<Entries> entries;
+	private List<Entry> entries;
 	
-	
-
 }

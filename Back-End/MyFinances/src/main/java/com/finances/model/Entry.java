@@ -14,20 +14,25 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.finances.model.enums.EntryType;
 import com.finances.model.enums.EntryStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_entries")
 @Data
 @Builder
-public class Entries {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Entry {
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
@@ -37,23 +42,22 @@ public class Entries {
 	@Size(max = 150)
 	private String description;
 	
-	@NotBlank
+	@NotNull
 	private Integer month;
-	
-	@NotBlank
+
+	@NotNull
 	private Integer year;
 	
-	@NotBlank
+	@NotNull
 	private BigDecimal value;
 	
-	@NotBlank
 	@Enumerated(value = EnumType.STRING)
 	private EntryType type;
 	
-	@NotBlank
 	@Enumerated(value = EnumType.STRING)
 	private EntryStatus status;
 	
+	@Builder.Default
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateRegister = new java.sql.Date(System.currentTimeMillis());
 	

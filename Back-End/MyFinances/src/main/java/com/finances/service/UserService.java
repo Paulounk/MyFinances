@@ -1,5 +1,7 @@
 package com.finances.service;
 
+import java.util.Optional;
+
 import com.finances.model.User;
 
 public interface UserService {
@@ -10,4 +12,6 @@ public interface UserService {
 	
 	void validateEmail(String email);
 	
+	Optional<User> getUserById(Long id);
+		
 }
