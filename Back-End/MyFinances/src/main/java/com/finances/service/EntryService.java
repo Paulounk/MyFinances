@@ -1,5 +1,6 @@
 package com.finances.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface EntryService {
 	void validate(Entry entry);
 	
 	Optional<Entry> getEntryById(Long id);
+	
+	BigDecimal getBalanceByUser(Long id);
 } 

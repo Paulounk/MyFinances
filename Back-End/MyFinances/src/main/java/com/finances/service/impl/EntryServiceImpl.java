@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.finances.exception.BusinessRuleException;
 import com.finances.model.Entry;
 import com.finances.model.enums.EntryStatus;
+import com.finances.model.enums.EntryType;
 import com.finances.repository.EntryRepository;
 import com.finances.service.EntryService;
 
@@ -41,7 +42,6 @@ public class EntryServiceImpl implements EntryService{
 
 		Objects.requireNonNull(entry.getId());
 		validate(entry);
-		entry.setStatus(EntryStatus.PENDING);
 		return repository.save(entry);
 	}
 	
@@ -61,7 +61,7 @@ public class EntryServiceImpl implements EntryService{
 			ExampleMatcher.matching()
 			.withIgnoreCase()
 			.withStringMatcher(StringMatcher.CONTAINING));
-		
+
 		return repository.findAll(example);
 
 	}
@@ -105,6 +105,23 @@ public class EntryServiceImpl implements EntryService{
 	public Optional<Entry> getEntryById(Long id) {
 		
 		return repository.findById(id);
+	}
+
+	@Override
+	public BigDecimal getBalanceByUser(Long id) {
+		
+		BigDecimal revenues = repository.getBalanceByTypeEntryAndUser(id, EntryType.REVENUE);
+		BigDecimal expenditures = repository.getBalanceByTypeEntryAndUser(id, EntryType.EXPENDITURE);
+		
+		if(revenues == null) {
+			revenues = BigDecimal.ZERO;
+		}
+		
+		if(expenditures == null) {
+			expenditures = BigDecimal.ZERO;
+		}
+		
+		return revenues.subtract(expenditures);
 	}
 
 }

@@ -1,10 +1,8 @@
 package com.finances.controller;
 
-
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finances.dto.EntryDTO;
+import com.finances.dto.UpdateStatusDTO;
 import com.finances.exception.BusinessRuleException;
 import com.finances.model.Entry;
 import com.finances.model.User;
 import com.finances.model.enums.EntryStatus;
 import com.finances.model.enums.EntryType;
-import com.finances.repository.EntryRepository;
 import com.finances.service.EntryService;
 import com.finances.service.UserService;
 
@@ -39,22 +37,24 @@ public class EntryController {
 		this.userService = userService;
 	}
 	
-	/* @GetMapping
+	/*@GetMapping
 	public ResponseEntity<List<Entry>> getAll(){
 		return ResponseEntity.ok(repository.findAll());
-	} */
+	}*/
 	
 	@GetMapping
-	public ResponseEntity<List<Entry>> search(
+	public ResponseEntity<?> search(
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "month", required = false) Integer month,
 			@RequestParam(value = "year", required = false) Integer year,
 			@RequestParam("user") Long idUser
 			){
+		
 		Entry entryFilter = new Entry();
 		entryFilter.setDescription(description);
 		entryFilter.setMonth(month);
 		entryFilter.setYear(year);
+
 		
 		Optional<User> user = userService.getUserById(idUser);
 		
@@ -65,12 +65,17 @@ public class EntryController {
 		}
 		
 		List<Entry> entries = service.search(entryFilter);
-		return ResponseEntity.ok(entries);
+
+		if(entries.isEmpty()) {
+			return new ResponseEntity("Essa porra ta voltando vazia", HttpStatus.BAD_GATEWAY);
+		}else {
+			return ResponseEntity.ok(entries);
+		}
 		
 	}
 	
 	@PostMapping
-	public ResponseEntity saveEntry(@RequestBody EntryDTO dto) {
+	public ResponseEntity<?> saveEntry(@RequestBody EntryDTO dto) {
 		
 		try {
 			Entry entity = convert(dto);
@@ -84,7 +89,7 @@ public class EntryController {
 	
 	
 	@PutMapping("{id}")
-	public ResponseEntity update(@PathVariable("id") Long id, @RequestBody EntryDTO dto) {
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody EntryDTO dto) {
 		
 		return service.getEntryById(id).map(resp -> {
 			try {
@@ -99,8 +104,33 @@ public class EntryController {
 			new ResponseEntity("Entry not found in database for update", HttpStatus.BAD_REQUEST));
 	}
 	
+	@PutMapping("{id}/update-status")
+	public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusDTO dto) {
+		
+		return service.getEntryById(id).map(resp -> {
+			
+			EntryStatus selectStatus = EntryStatus.valueOf(dto.getStatus());
+			
+			if(selectStatus == null) {
+				return ResponseEntity.badRequest().body("Unable to update release status. Enter a valid status!");
+			}
+			
+			try {
+				resp.setStatus(selectStatus);
+				System.out.println(selectStatus);
+				service.update(resp);
+				return ResponseEntity.ok(resp);
+			}catch(BusinessRuleException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+			
+		}).orElseGet(() -> 
+			new ResponseEntity("Entry not found in database for update.", HttpStatus.BAD_REQUEST));
+		
+	}
+	
 	@DeleteMapping("{id}")
-	public ResponseEntity delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		
 		return service.getEntryById(id).map(resp -> {
 			service.delete(resp);
