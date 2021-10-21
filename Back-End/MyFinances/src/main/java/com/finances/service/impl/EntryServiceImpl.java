@@ -54,11 +54,10 @@ public class EntryServiceImpl implements EntryService{
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public List<Entry> search(Entry entryFilter) {
 		
 		Example<Entry> example = Example.of(entryFilter,
-			ExampleMatcher.matching()
+			ExampleMatcher.matchingAll()
 			.withIgnoreCase()
 			.withStringMatcher(StringMatcher.CONTAINING));
 

@@ -20,7 +20,7 @@ import com.finances.repository.UserRepository;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test") //Especifica que será utilizado o application-test.properties
 @DataJpaTest //Realiza o rollback na transação de cada teste realizado
-@AutoConfigureTestDatabase(replace = Replace.NONE) //Para não subescrever as config da base de teste
+@AutoConfigureTestDatabase(replace = Replace.NONE) //Para não sob-escrever as config do ambiente de teste
 public class UserRepositoryTest {
 
 	@Autowired

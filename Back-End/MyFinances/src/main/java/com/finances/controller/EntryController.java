@@ -1,8 +1,10 @@
 package com.finances.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,14 +31,12 @@ import com.finances.service.UserService;
 @RequestMapping("/entries")
 public class EntryController {
 
+	@Autowired
 	private EntryService service;
+	
+	@Autowired
 	private UserService userService;
-	
-	public EntryController (EntryService service, UserService userService) {
-		this.service = service;
-		this.userService = userService;
-	}
-	
+
 	/*@GetMapping
 	public ResponseEntity<List<Entry>> getAll(){
 		return ResponseEntity.ok(repository.findAll());
@@ -54,7 +54,6 @@ public class EntryController {
 		entryFilter.setDescription(description);
 		entryFilter.setMonth(month);
 		entryFilter.setYear(year);
-
 		
 		Optional<User> user = userService.getUserById(idUser);
 		

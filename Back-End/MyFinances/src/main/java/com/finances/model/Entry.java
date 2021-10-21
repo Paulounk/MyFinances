@@ -38,17 +38,13 @@ public class Entry {
 	@Id
 	private Long id;
 	
-	@NotBlank
 	@Size(max = 150)
 	private String description;
 	
-	@NotNull
 	private Integer month;
 
-	@NotNull
 	private Integer year;
 	
-	@NotNull
 	private BigDecimal value;
 	
 	@Enumerated(value = EnumType.STRING)
