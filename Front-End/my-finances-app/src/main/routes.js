@@ -3,6 +3,7 @@ import React from "react";
 import Home from '../views/home'
 import Login from "../views/login";
 import SignUp from "../views/signup";
+import SearchEntries from "../views/entries/search-entries";
 
 import { Route, Switch, HashRouter} from 'react-router-dom'
 
@@ -13,6 +14,7 @@ function Routes(){
                 <Route path='/home' component={Home}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/sign-up' component={SignUp}/>
+                <Route path='/search-entries' component={SearchEntries}/>
             </Switch>
         </HashRouter>
     )

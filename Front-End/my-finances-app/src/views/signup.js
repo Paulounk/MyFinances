@@ -2,6 +2,8 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
+import UserService from "../app/service/userService";
+import { messageError, messageSuccess, messageAlert } from '../components/toastr'
 
 
 class SignUp extends React.Component {
@@ -13,12 +15,61 @@ class SignUp extends React.Component {
         confirmPassword: ''
     }
 
+    constructor() {
+        super();
+        this.service = new UserService();
+    }
+
+    validate(){
+        const msgs = []
+
+        if(!this.state.name){
+            msgs.push('The name field is required.')
+        }
+
+        if(!this.state.email){
+            msgs.push('The e-mail field is required.')
+        }else if(!this.state.email.match(/.+@.+\..+/) ){
+            msgs.push('Enter a valid e-email!')
+        }
+
+        if(!this.state.password || !this.state.confirmPassword){
+            msgs.push('Confirm your password!')
+        }else if (this.state.password !== this.state.confirmPassword){
+            msgs.push('Passwords do not match!')
+        }
+
+        return msgs;
+    }
+
     save = () => {
-        console.log(this.state)
+
+        const msgs = this.validate();
+
+        if(msgs && msgs.length > 0){
+            msgs.forEach( (msg, index) => {
+                messageAlert(msg)
+            });
+            return false;
+        }
+
+        const user = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        this.service.saveUser(user)
+            .then(response => {
+                messageSuccess('Successfully registered user! Make your login.')
+                this.props.history.push('/login')
+            }).catch(error => {
+                messageError(error.response.data)
+            })
     }
 
     cancel = () => {
-        this.props.history.push('/sign-in')
+        this.props.history.push('/login')
     }
 
     render() {
@@ -59,5 +110,6 @@ class SignUp extends React.Component {
         )
     }
 }
+
 
 export default withRouter(SignUp);
