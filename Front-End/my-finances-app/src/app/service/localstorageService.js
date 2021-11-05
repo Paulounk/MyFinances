@@ -8,6 +8,10 @@ class LocalStorageService{
         const item = localStorage.getItem(key);
         return JSON.parse(item)
     }
+
+    static deleteItem(key){
+        localStorage.removeItem(key)
+    }
 }
 
 export default LocalStorageService

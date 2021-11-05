@@ -4,8 +4,8 @@ import Card from '../components/card';
 import FormGroup from "../components/form-group";
 
 import UserService from "../app/service/userService";
-import LocalStorageService from "../app/service/localstorageService";
 import {messageAlert} from '../components/toastr'
+import { AuthContext } from '../main/authProvider'
 
 class Login extends React.Component {
 
@@ -19,12 +19,12 @@ class Login extends React.Component {
         this.service = new UserService();
     }
 
-    login = async () => {
+    login = () => {
         this.service.authenticate({
             email: this.state.email,
             password: this.state.password
         }).then(response => {
-            LocalStorageService.addItem('_user_acess', response.data)
+            this.context.logOn(response.data)
             this.props.history.push('/home')
        }).catch(error => {
             messageAlert(error.response.data)
@@ -57,8 +57,14 @@ class Login extends React.Component {
                                                         className="form-control" id="exampleInputPassword"/>
                                                 </FormGroup>
 
-                                                <button onClick={this.login} className="btn btn-outline-success">Login</button>
-                                                <button onClick={this.browseSignUp} className="btn btn-outline-info">Sign Up</button>
+                                                <button onClick={this.login} 
+                                                        className="btn btn-outline-success">
+                                                        <i className="pi pi-sign-in"></i> Login
+                                                </button>
+                                                <button onClick={this.browseSignUp} 
+                                                        className="btn btn-outline-info">
+                                                        <i className="pi pi-user-plus"></i> Sign Up
+                                                        </button>
 
                                             </fieldset>
                                         </div>
@@ -72,5 +78,7 @@ class Login extends React.Component {
         )
     }
 }
+
+Login.contextType = AuthContext
 
 export default withRouter(Login);

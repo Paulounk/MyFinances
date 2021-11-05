@@ -25,7 +25,7 @@ class ApiService {
     }
 
     delete(url){
-        const requestUrl = `${this.apiurl}${url}`
+        const requestUrl = `${this.apiurl}/${url}`
         return httpClient.delete(requestUrl)
     }
 }

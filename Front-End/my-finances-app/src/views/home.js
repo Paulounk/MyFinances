@@ -1,7 +1,9 @@
 import React from "react";
 import UserService from "../app/service/userService";
+import { AuthContext } from '../main/authProvider';
 
-import LocalStorageService from "../app/service/localstorageService";
+import Currency from "currency-formatter";
+
 
 class Home extends React.Component {
 
@@ -15,7 +17,7 @@ class Home extends React.Component {
     }
 
     componentDidMount(){
-        const userAcess = LocalStorageService.getItem('_user_acess') 
+        const userAcess = this.context.authenticatedUser;
 
         this.userService
             .getBalanceByUser(userAcess.id)
@@ -32,17 +34,19 @@ class Home extends React.Component {
                 <div className="jumbotron">
                     <h1 className="display-3">Welcome!</h1>
                     <p className="lead">This is your finance system.</p>
-                    <p className="lead">Your balance for the current month is R$ {this.state.balance}</p>
+                    <p className="lead">Your balance for the current month is <span className="balance"> {Currency.format(this.state.balance, { locale: 'pt-BR' })}</span> </p> 
                     <hr className="my-4"/>
                     <p>This is your administrative area, use one of the menus or buttons below to navigate the system.</p>
                     <p className="lead">
-                        <a className="btn btn-outline-success btn-lg" href="#/sign-up" role="button"><i className="fa fa-users"></i>Sign-Up</a>
-                        <a className="btn btn-outline-info btn-lg" href="https://bootswatch.com/flatly/#" role="button"><i className="fa fa-users"></i>Register Releases</a>
+                        <a className="btn btn-outline-success btn-lg" href="#/sign-up" role="button"><i className="pi pi-user"></i>Sign-Up</a>
+                        <a className="btn btn-outline-info btn-lg" href="#/entries-registration" role="button"><i className="pi pi-money-bill"></i>Register Releases</a>
                     </p>
                 </div>
             </div>
         )
     }
 }
+
+Home.contextType = AuthContext
 
 export default Home

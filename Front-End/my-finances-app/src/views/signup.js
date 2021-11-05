@@ -20,45 +20,19 @@ class SignUp extends React.Component {
         this.service = new UserService();
     }
 
-    validate(){
-        const msgs = []
-
-        if(!this.state.name){
-            msgs.push('The name field is required.')
-        }
-
-        if(!this.state.email){
-            msgs.push('The e-mail field is required.')
-        }else if(!this.state.email.match(/.+@.+\..+/) ){
-            msgs.push('Enter a valid e-email!')
-        }
-
-        if(!this.state.password || !this.state.confirmPassword){
-            msgs.push('Confirm your password!')
-        }else if (this.state.password !== this.state.confirmPassword){
-            msgs.push('Passwords do not match!')
-        }
-
-        return msgs;
-    }
-
     save = () => {
 
-        const msgs = this.validate();
+        const {name, email, password, confirmPassword} = this.state
+        const user = {name, email, password, confirmPassword} 
 
-        if(msgs && msgs.length > 0){
-            msgs.forEach( (msg, index) => {
-                messageAlert(msg)
-            });
+        try{
+            this.service.validate(user)
+        }catch(error){
+            const messagesErros = error.messages;
+            messagesErros.forEach(msg => messageAlert(msg));
             return false;
         }
-
-        const user = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password
-        }
-
+    
         this.service.saveUser(user)
             .then(response => {
                 messageSuccess('Successfully registered user! Make your login.')
@@ -100,8 +74,16 @@ class SignUp extends React.Component {
                                         onChange={e => this.setState({ confirmPassword: e.target.value })} />
                                 </FormGroup>
 
-                                <button onClick={this.save} type="button" className="btn btn-outline-success">Save</button>
-                                <button onClick={this.cancel} type="button" className="btn btn-outline-danger">Cancel</button>
+                                <button onClick={this.save} 
+                                        type="button" 
+                                        className="btn btn-outline-success">
+                                        <i className="pi pi-save"></i> Save
+                                        </button>
+                                <button onClick={this.cancel} 
+                                        type="button" 
+                                        className="btn btn-outline-danger">
+                                        <i className="pi pi-times"></i> Cancel
+                                        </button>
                             </div>
                         </div>
                     </div>
