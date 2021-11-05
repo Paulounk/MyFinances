@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Example;
-
 import com.finances.model.Entry;
 import com.finances.model.enums.EntryStatus;
 

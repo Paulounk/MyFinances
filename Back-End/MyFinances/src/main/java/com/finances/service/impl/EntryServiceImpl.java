@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
@@ -18,15 +19,14 @@ import com.finances.model.enums.EntryType;
 import com.finances.repository.EntryRepository;
 import com.finances.service.EntryService;
 
+
 @Service
 public class EntryServiceImpl implements EntryService{
 
+	
+	@Autowired
 	private EntryRepository repository;
-	
-	public EntryServiceImpl(EntryRepository repository) {
-		this.repository = repository;
-	}
-	
+
 	@Override
 	@Transactional
 	public Entry save(Entry entry) {
@@ -57,11 +57,11 @@ public class EntryServiceImpl implements EntryService{
 	public List<Entry> search(Entry entryFilter) {
 		
 		Example<Entry> example = Example.of(entryFilter,
-			ExampleMatcher.matchingAll()
-			.withIgnoreCase()
-			.withStringMatcher(StringMatcher.CONTAINING));
+				ExampleMatcher.matching()
+				.withIgnoreCase()
+				.withStringMatcher(StringMatcher.CONTAINING));
 
-		return repository.findAll(example);
+			return repository.findAll(example);
 
 	}
 
@@ -109,8 +109,8 @@ public class EntryServiceImpl implements EntryService{
 	@Override
 	public BigDecimal getBalanceByUser(Long id) {
 		
-		BigDecimal revenues = repository.getBalanceByTypeEntryAndUser(id, EntryType.REVENUE);
-		BigDecimal expenditures = repository.getBalanceByTypeEntryAndUser(id, EntryType.EXPENDITURE);
+		BigDecimal revenues = repository.getBalanceByTypeEntryAndUserAndStatus(id, EntryType.REVENUE, EntryStatus.CONFIRMED);
+		BigDecimal expenditures = repository.getBalanceByTypeEntryAndUserAndStatus(id, EntryType.EXPENDITURE, EntryStatus.CONFIRMED);
 		
 		if(revenues == null) {
 			revenues = BigDecimal.ZERO;

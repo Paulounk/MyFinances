@@ -1,12 +1,13 @@
 package com.finances.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import com.finances.service.UserService;
 
 @RestController
 @RequestMapping("/entries")
+@CrossOrigin("*")
 public class EntryController {
 
 	@Autowired
@@ -43,7 +45,7 @@ public class EntryController {
 	}*/
 	
 	@GetMapping
-	public ResponseEntity<?> search(
+	public ResponseEntity<List<Entry>> search(
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "month", required = false) Integer month,
 			@RequestParam(value = "year", required = false) Integer year,
@@ -51,10 +53,12 @@ public class EntryController {
 			){
 		
 		Entry entryFilter = new Entry();
+
 		entryFilter.setDescription(description);
 		entryFilter.setMonth(month);
 		entryFilter.setYear(year);
-		
+		entryFilter.setDateRegister(null);
+
 		Optional<User> user = userService.getUserById(idUser);
 		
 		if(!user.isPresent()) {
@@ -65,11 +69,17 @@ public class EntryController {
 		
 		List<Entry> entries = service.search(entryFilter);
 
-		if(entries.isEmpty()) {
-			return new ResponseEntity("Essa porra ta voltando vazia", HttpStatus.BAD_GATEWAY);
-		}else {
-			return ResponseEntity.ok(entries);
-		}
+		return ResponseEntity.ok(entries);
+		
+	}
+	
+	
+	@GetMapping("{id}")
+	public ResponseEntity<Entry> getById(@PathVariable Long id){
+		
+		return service.getEntryById(id)
+				.map(entry -> new ResponseEntity(convertDTO(entry), HttpStatus.OK))
+				.orElseGet( () -> new ResponseEntity<Entry>(HttpStatus.NOT_FOUND));
 		
 	}
 	
@@ -88,7 +98,7 @@ public class EntryController {
 	
 	
 	@PutMapping("{id}")
-	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody EntryDTO dto) {
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EntryDTO dto) {
 		
 		return service.getEntryById(id).map(resp -> {
 			try {
@@ -116,7 +126,6 @@ public class EntryController {
 			
 			try {
 				resp.setStatus(selectStatus);
-				System.out.println(selectStatus);
 				service.update(resp);
 				return ResponseEntity.ok(resp);
 			}catch(BusinessRuleException e) {
@@ -157,8 +166,23 @@ public class EntryController {
 			entry.setType(EntryType.valueOf(dto.getType()));
 		}
 		if(dto.getStatus() != null) {
-			entry.setStatus(EntryStatus.valueOf(dto.getType()));
+			entry.setStatus(EntryStatus.valueOf(dto.getStatus()));
 		}
 		return entry;
+	}
+	
+	
+	private EntryDTO convertDTO(Entry entry) {
+		
+		return EntryDTO.builder()
+				.id(entry.getId())
+				.description(entry.getDescription())
+				.value(entry.getValue())
+				.month(entry.getMonth())
+				.year(entry.getYear())
+				.status(entry.getStatus().name())
+				.type(entry.getType().name())
+				.build();
+		
 	}
 }

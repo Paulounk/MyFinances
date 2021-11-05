@@ -35,21 +35,17 @@ public class User {
 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@Column(name = "id")
 	private Long id;
 	
 	@Size(max=150)
-	@Column(name = "name")
 	private String name;
 	
 	@NotBlank
 	@Email
-	@Column(name = "email")
 	private String email;
 	
 	@NotBlank
 	@Size(min=6)
-	@Column(name = "password")
 	@JsonIgnore
 	private String password;
 	

@@ -289,11 +289,11 @@ public class EntryServiceTest {
 		Long idUser = 1l;
 		
 		Mockito.when(repository
-				.getBalanceByTypeEntryAndUser(idUser, EntryType.REVENUE)) 
+				.getBalanceByTypeEntryAndUserAndStatus(idUser, EntryType.REVENUE, EntryStatus.CONFIRMED)) 
 				.thenReturn(BigDecimal.valueOf(100));
 		
 		Mockito.when( repository
-				.getBalanceByTypeEntryAndUser(idUser, EntryType.EXPENDITURE)) 
+				.getBalanceByTypeEntryAndUserAndStatus(idUser, EntryType.EXPENDITURE, EntryStatus.CONFIRMED)) 
 				.thenReturn(BigDecimal.valueOf(50));
 		
 		//Action
