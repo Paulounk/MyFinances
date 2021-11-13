@@ -46,7 +46,7 @@ public class EntryServiceImpl implements EntryService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public void delete(Entry entry) {
 		 
 		Objects.requireNonNull(entry.getId());

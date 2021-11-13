@@ -141,7 +141,10 @@ public class EntryController {
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		
 		return service.getEntryById(id).map(resp -> {
+			long inicio = System.currentTimeMillis();  
 			service.delete(resp);
+			long fim  = System.currentTimeMillis();  
+			System.out.println( fim - inicio );
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}).orElseGet(() -> 
 			new ResponseEntity("Entry not found in database for update", HttpStatus.BAD_REQUEST));

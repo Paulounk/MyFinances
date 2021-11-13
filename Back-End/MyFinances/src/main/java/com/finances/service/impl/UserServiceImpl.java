@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.finances.exception.AuthenticationException;
@@ -17,10 +18,12 @@ import com.finances.service.UserService;
 public class UserServiceImpl implements UserService{
 	
 	private UserRepository repository;
+	private PasswordEncoder encoder;
 	
-	public UserServiceImpl(UserRepository repository) {
+	public UserServiceImpl(UserRepository repository, PasswordEncoder encoder) {
 		super();
 		this.repository = repository;
+		this.encoder = encoder;
 	}
 
 	@Override
@@ -32,7 +35,9 @@ public class UserServiceImpl implements UserService{
 			throw new AuthenticationException("User not found with the email entered!");
 		}
 		
-		if(!user.get().getPassword().equals(passowrd)) {
+		boolean passwordsMatch = encoder.matches(passowrd, user.get().getPassword());
+		
+		if(!passwordsMatch) {
 			throw new AuthenticationException("Invalid Password!");
 		}
 		
@@ -44,7 +49,14 @@ public class UserServiceImpl implements UserService{
 	public User saveUser(User user) {
 
 		validateEmail(user.getEmail());
+		encryptPassword(user);
 		return repository.save(user);
+	}
+	
+	public void encryptPassword(User user) {
+		String password = user.getPassword();
+		String encryptPassword = encoder.encode(password);
+		user.setPassword(encryptPassword);
 	}
 
 	@Override
