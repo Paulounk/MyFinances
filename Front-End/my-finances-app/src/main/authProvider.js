@@ -1,6 +1,8 @@
 import React from 'react';
 
 import AuthService from '../app/service/authService'
+import ApiService from '../app/apiservice'
+import jwt from 'jsonwebtoken'
 
 export const AuthContext = React.createContext()
 export const AuthConsumer = AuthContext.Consumer;
@@ -13,8 +15,16 @@ class AuthProvider extends React.Component{
         isAuthenticated: false
     }
 
-    logOn = (user) => {
-        AuthService.login(user)
+    logOn = (tokenDTO) => {
+        const token = tokenDTO.token
+        const claims = jwt.decode(token)
+
+        const user = {
+            id: claims.userId, //Pegando os atributos do token definido no back-end "JwtServiceImpl"
+            name: claims.name
+        }
+
+        AuthService.login(user, token)
         this.setState({isAuthenticated: true, authenticatedUser: user})
     }
 
@@ -23,6 +33,16 @@ class AuthProvider extends React.Component{
         this.setState({isAuthenticated: false, authenticatedUser: ''})
     }
 
+    componentDidMount(){
+        const isAuthenticated = AuthService.isAuthenticatedUser()
+
+        if(isAuthenticated){
+            const user = AuthService.refreshSession();
+            this.setState({
+                isAuthenticated: true, 
+                authenticatedUser: user})
+        }
+    }
 
     render(){
         const contexto = {

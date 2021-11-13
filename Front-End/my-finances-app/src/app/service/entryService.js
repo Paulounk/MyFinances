@@ -28,7 +28,7 @@ export default class EntryService extends ApiService {
 
     getListTypes(){
         return [
-            {label: 'Selecione', value:''},
+            {label: 'Select', value:''},
             {label: 'Revenue', value:'REVENUE'},
             {label: 'Expenditure', value:'EXPENDITURE'}
         ]

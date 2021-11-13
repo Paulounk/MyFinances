@@ -18,7 +18,7 @@ class UserService extends ApiService{
     }
 
     saveUser(user){
-        return this.post('/', user);
+        return this.post('', user);
     }
 
     validate(user){

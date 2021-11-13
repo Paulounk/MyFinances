@@ -16,7 +16,7 @@ function Navbar(props) {
                     aria-controls="navbarResponsive" 
                     aria-expanded="false" 
                     aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
+                    <span className="navbar-toggler-icon icon"></span>
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarResponsive">
